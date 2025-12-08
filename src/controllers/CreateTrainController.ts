@@ -7,12 +7,13 @@ export interface DataProps {
   height: number;
   gender: string;
   age: number;
+  level: string;
   objective: string;
 }
 
 class CreateTrainController {
   async handle(request: FastifyRequest, reply: FastifyReply) {
-    const { name, age, gender, weight, height, objective } =
+    const { name, age, gender, weight, height, level, objective } =
       request.body as DataProps;
 
     const createTrainService = new CreateTrainService();
@@ -22,6 +23,7 @@ class CreateTrainController {
       height,
       gender,
       age,
+      level,
       objective,
     });
     reply.send(train);

@@ -2,15 +2,23 @@ import { DataProps } from "../controllers/CreateTrainController";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 class CreateTrainService {
-  async execute({ name, age, gender, weight, height, objective }: DataProps) {
+  async execute({
+    name,
+    age,
+    gender,
+    weight,
+    height,
+    level,
+    objective,
+  }: DataProps) {
     try {
       const genAI = new GoogleGenerativeAI(process.env.API_KEY!);
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       const response = await model.generateContent(`
         Em português, crie um plano de treino personalizado para uma pessoa com as seguintes informações: 
-        Nome: ${name}, Idade: ${age}, Gênero: ${gender}, Altura: ${height} cm, Peso: ${weight} kg, Objetivo: ${objective}.
-        O plano deve incluir exercícios recomendados, número de séries e repetições para cada exercício, e dicas adicionais para alcançar o objetivo.
+        Nome: ${name}, Idade: ${age}, Gênero: ${gender}, Altura: ${height} cm, Peso: ${weight} kg, Level: ${level}, Objetivo: ${objective}.
+        O plano deve incluir exercícios recomendados, número de séries e repetições para cada exercício, e dicas adicionais para alcançar o objetivo, sempre respeitando o a frequencia ${level}.
         Retorne em json dentro de data retorna as propriedades que o usuário mando e com o plano de treino de cada dia da semana dentro de um array contendo em cada objeto um treino para cada dia da semana. Como no
         exemplo abaixo:
         {
@@ -19,6 +27,7 @@ class CreateTrainService {
         genero: "${gender}",
         altura: ${height},
         peso: ${weight},
+        level: ${level},
         objetivo: "${objective}",
         treinos: [
           {"dia": "Segunda-feira", "exercicios": [ {"nome": "Agachamento", "series": 4, "repeticoes": 12}, {"nome": "Supino", "series": 4, "repeticoes": 10} ], "dicas": "Mantenha a postura correta durante os exercícios." },
